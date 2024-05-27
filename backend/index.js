@@ -61,12 +61,12 @@ app.post(
 );
 app.get("/auth/me", checkAuth, getMe);
 
-app.post("/upload", checkAuth, upload.single("image")),
+app.post("/upload", checkAuth, upload.single("image"),
   (req, res) => {
     res.json({
       url: `/uploads/${req.file.originalname}`,
     });
-  };
+  });
 
 app.get("/tags", getLastTags);
 app.get("/posts", getAll);

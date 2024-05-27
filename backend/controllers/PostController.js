@@ -31,22 +31,18 @@ export const getAll = async (req, res) => {
   }
 };
 
-export const getOne = (req, res) => {
+export const getOne = async (req, res) => {
   try {
     const postId = req.params.id;
-    PostModel.findOneAndUpdate(
-      {
-        _id: postId,
-      },
-      {
-        $inc: { viewsCount: 1 },
-      },
-      {
-        returnDocument: "after",
-      }
-    )
-      .then((doc) => res.json(doc))
-      .catch((err) => res.status(500).json({ message: "Unable to get post" }));
+    // Update the document
+    await PostModel.findOneAndUpdate(
+      { _id: postId },
+      { $inc: { viewsCount: 1 } }
+    );
+
+    // Retrieve the updated document and populate the 'user' field
+    const post = await PostModel.findOne({ _id: postId }).populate("user");
+    res.json(post);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -54,6 +50,7 @@ export const getOne = (req, res) => {
     });
   }
 };
+
 
 export const remove = (req, res) => {
   try {
@@ -78,13 +75,13 @@ export const create = async (req, res) => {
     const doc = new PostModel({
       title: req.body.title,
       text: req.body.text,
-      ImageUrl: req.body.ImageUrl,
+      imageUrl: req.body.imageUrl,
       tags: req.body.tags,
       user: req.userId,
     });
 
     const post = await doc.save();
-
+    console.log("req body", req.body);
     res.json(post);
   } catch (err) {
     console.log(err);
@@ -104,7 +101,7 @@ export const update = async (req, res) => {
       {
         title: req.body.title,
         text: req.body.text,
-        ImageUrl: req.body.ImageUrl,
+        imageUrl: req.body.imageUrl,
         tags: req.body.tags,
         user: req.userId,
       }

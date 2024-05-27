@@ -3,7 +3,7 @@ import { body } from "express-validator";
 export const registerValidation = [
   body("email", "Invalid email").isEmail(),
   body("password", "Invalid password").isLength({ min: 5 }),
-  body("fullName", "Invalid full name").isLength({ min: 3 }),
+  body("fullName", "Invalid full name: length should be more than 3"),
   body("avatarUrl", "Invalid avatar").optional().isURL(),
 ];
 

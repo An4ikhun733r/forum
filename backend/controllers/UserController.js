@@ -85,7 +85,7 @@ export const getMe = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: "User didn't findd",
+        message: "User didn't find",
       });
     }
 
